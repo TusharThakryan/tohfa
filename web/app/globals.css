@@ -1,0 +1,271 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand palette */
+  --color-plum: #6c4ab6;
+  --color-plum-deep: #533694;
+  --color-plum-soft: #8b6cd1;
+  --color-orchid: #c996cc;
+  --color-orchid-soft: #e3c4e5;
+  --color-blush: #fff4f8;
+  --color-petal: #f7e2e2;
+  --color-gold: #d4af37;
+  --color-gold-soft: #ecd9a0;
+  --color-sage: #8ec5a4;
+  --color-mist: #f6f6f6;
+  --color-ink: #18181b;
+  --color-ink-soft: #52525b;
+
+  /* Typography */
+  --font-display: var(--font-clash), "Clash Display", ui-sans-serif, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-button: var(--font-satoshi), var(--font-inter), ui-sans-serif, sans-serif;
+
+  /* Shape & depth */
+  --radius-blob: 42% 58% 61% 39% / 45% 42% 58% 55%;
+  --shadow-soft: 0 8px 30px rgb(108 74 182 / 0.08);
+  --shadow-lift: 0 16px 48px rgb(108 74 182 / 0.16);
+  --shadow-gold: 0 10px 36px rgb(212 175 55 / 0.24);
+
+  /* Motion */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-petal-fall: petal-fall linear infinite;
+
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1.5deg);
+  }
+}
+
+@keyframes blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(28px, -34px) scale(1.06);
+  }
+  66% {
+    transform: translate(-22px, 22px) scale(0.95);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: -200% center;
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-8vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: var(--petal-opacity, 0.7);
+  }
+  50% {
+    transform: translateY(48vh) translateX(3vw) rotate(180deg);
+  }
+  100% {
+    transform: translateY(108vh) translateX(-2vw) rotate(340deg);
+    opacity: 0;
+  }
+}
+
+/* Named font faces for canvas/SVG text (next/font names are hashed) */
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Semibold.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+html {
+  /* Scale the whole site up one browser-zoom step (Cmd+ once = 110%).
+     Tailwind sizes in rem, so everything tracks the root font size. */
+  font-size: 110%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-blush);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-orchid);
+  color: white;
+}
+
+/* Clash Display sets words very tight; give headlines room to breathe */
+.font-display {
+  word-spacing: 0.14em;
+}
+
+/* Gradient headline text */
+.text-gradient {
+  background: linear-gradient(115deg, #6c4ab6 20%, #c996cc 55%, #d4af37 90%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Frosted glass surface */
+.glass {
+  background: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+}
+
+/* ── Living Bouquet Engine ─────────────────────────────────────
+   Idle motion, entrance choreography, and particle keyframes for the
+   share-page bouquet. All transform/opacity only (GPU-composited).
+   The prefers-reduced-motion block below freezes every one of these. */
+
+/* Idle profiles - each flower family moves differently (see
+   features/living/motion-profiles.ts for the mapping). */
+@keyframes lv-sway {
+  0%, 100% { transform: rotate(-1.4deg); }
+  50% { transform: rotate(1.6deg); }
+}
+@keyframes lv-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3.5px); }
+}
+@keyframes lv-face {
+  0%, 100% { transform: rotate(-1.8deg); }
+  50% { transform: rotate(2.4deg); }
+}
+@keyframes lv-drift {
+  0%, 100% { transform: translate(0, 0) rotate(-1.2deg); }
+  33% { transform: translate(1.6px, -2.4px) rotate(0.8deg); }
+  66% { transform: translate(-1.4px, -1px) rotate(1.6deg); }
+}
+@keyframes lv-flutter {
+  0%, 100% { transform: rotate(-2.4deg) skewX(0deg); }
+  40% { transform: rotate(2.8deg) skewX(1.5deg); }
+  70% { transform: rotate(-1deg) skewX(-1.2deg); }
+}
+@keyframes lv-ribbon {
+  0%, 100% { transform: rotate(-1deg) scaleX(1); }
+  50% { transform: rotate(1.1deg) scaleX(1.028); }
+}
+@keyframes lv-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.006); }
+}
+@keyframes lv-twinkle {
+  0%, 100% { opacity: 0.45; transform: scale(0.88); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.lv-anim {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+[data-lv-paused] .lv-anim,
+[data-lv-paused] .lv-enter,
+[data-lv-paused] .lv-petal,
+[data-lv-paused] .lv-mote {
+  animation-play-state: paused;
+}
+
+/* Hover responses - gentle bloom for flowers, softer for ribbon/wrap */
+.lv-hover,
+.lv-hover-soft {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lv-hover:hover { transform: scale(1.06); }
+.lv-hover-soft:hover { transform: scale(1.03) rotate(0.6deg); }
+
+/* Opening choreography - one-shot entrances, staggered via inline delay */
+@keyframes lv-enter-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lv-enter-unfold {
+  from { opacity: 0; transform: scale(0.96, 0.9); }
+  to { opacity: 1; transform: scale(1, 1); }
+}
+@keyframes lv-enter-untie {
+  from { opacity: 0; transform: rotate(-12deg) scale(1.25); }
+  60% { opacity: 1; transform: rotate(3deg) scale(0.97); }
+  to { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+@keyframes lv-enter-bloom {
+  from { opacity: 0; transform: scale(0.01); }
+  55% { opacity: 1; transform: scale(1.14); }
+  78% { transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes lv-settle {
+  from { transform: scale(1.035); }
+  to { transform: scale(1); }
+}
+.lv-enter {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Petal engine - falling petals, hover releases, click bursts */
+@keyframes lv-petal-fall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  12% { opacity: var(--po, 0.85); }
+  100% { transform: translate(var(--dx, 20px), var(--dy, 300px)) rotate(var(--dr, 220deg)); opacity: 0; }
+}
+@keyframes lv-petal-burst {
+  0% { transform: translate(0, 0) rotate(0deg) scale(0.7); opacity: 1; }
+  100% { transform: translate(var(--bx, 30px), var(--by, -24px)) rotate(var(--br, 160deg)) scale(1); opacity: 0; }
+}
+.lv-petal { will-change: transform, opacity; }
+
+/* Ambient motes - dust, pollen, tiny sparkles */
+@keyframes lv-mote {
+  0% { transform: translate(0, 0); opacity: 0; }
+  18% { opacity: var(--mo, 0.5); }
+  82% { opacity: var(--mo, 0.5); }
+  100% { transform: translate(var(--mx, 8px), -46px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
